@@ -64,6 +64,7 @@ jobs:
         project.save
         EOF
 
+
     - name: Build archive
       run: |
         xcodebuild -sdk iphoneos -project SignIn/SignIn.xcodeproj \
