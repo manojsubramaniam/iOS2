@@ -64,6 +64,11 @@ jobs:
         project.save
         EOF
 
+    - name: Clean project
+      run: xcodebuild clean -project SignIn/SignIn.xcodeproj -scheme SignIn -configuration Release
+
+    - name: Build project
+      run: xcodebuild build -project SignIn/SignIn.xcodeproj -scheme SignIn -configuration Release
 
     - name: Build archive
       run: |
