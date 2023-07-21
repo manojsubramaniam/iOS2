@@ -15,8 +15,10 @@ jobs:
     - name: Install Apple Certificate
       uses: apple-actions/import-codesign-certs@v1
       with:
-        p12-file-base64: ${{ secrets.P12_BASE64 }}
+        p12-filepath: path/to/your/P12_certificate.p12  # Replace with the actual path to your P12 certificate file
         p12-password: ${{ secrets.P12_PASSWORD }}
+        keychain: signing_temp
+        create-keychain: true
 
     - name: Install the provisioning profile
       env:
