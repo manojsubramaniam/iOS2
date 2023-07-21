@@ -14,9 +14,6 @@ jobs:
       
     - name: List root directory contents
       run: ls -la
-    
-    - name: Check file permissions
-      run: ls -la Certificate.p12
       
     - name: Install the Apple certificate and provisioning profile
       env:
