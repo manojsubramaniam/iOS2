@@ -108,21 +108,22 @@ jobs:
           ls -a "$RUNNER_TEMP/SignIn.xcarchive/Products/Applications/"
      
       - name: Prepare SSH key
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
         run: |
           # Set up the SSH key for authentication
           mkdir -p ~/.ssh
-          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
 
           # Disable strict host key checking for the remote server
           echo "StrictHostKeyChecking no" >> ~/.ssh/config
 
-      - name: Copy Archive to Remote Server
-        run: |
-          # Create the destination directory on the remote server if it doesn't exist
-          ssh ubuntu@100.26.141.100 "mkdir -p /home/ubuntu"
-
           # Copy the archive files to the remote server using scp
           scp -r "$RUNNER_TEMP/SignIn.xcarchive" ubuntu@100.26.141.100:/home/ubuntu
+
+          # Cleanup: Remove the temporary environment file
+          rm ~/.ssh/id_rsa
+
 
      
