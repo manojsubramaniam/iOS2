@@ -90,7 +90,10 @@ jobs:
           # Save the changes to the Xcode project file
           project.save
           EOF
-          
+      - name: Build Cleanup
+        run: |
+          xcodebuild clean -workspace SignIn/SignIn.xcworkspace -scheme SignIn | xcpretty
+
       - name: Build, Archive, and Export IPA
         run: |
           xcodebuild archive -workspace SignIn/SignIn.xcworkspace \
