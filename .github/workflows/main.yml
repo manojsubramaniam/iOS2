@@ -94,6 +94,10 @@ jobs:
         run: |
           xcodebuild clean -workspace SignIn/SignIn.xcworkspace -scheme SignIn | xcpretty
 
+      - name: Build Test
+        run: |
+          xcodebuild test -workspace SignIn/SignIn.xcworkspace -scheme SignIn -destination 'platform=iOS   Simulator,name=iPhone 14,OS=16.2' | xcpretty -s
+
       - name: Build, Archive, and Export IPA
         run: |
           xcodebuild archive -workspace SignIn/SignIn.xcworkspace \
