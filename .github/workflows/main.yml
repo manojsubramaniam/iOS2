@@ -105,19 +105,16 @@ jobs:
    #     run: |
    #       xcodebuild test -workspace SignIn/SignIn.xcworkspace -scheme SignIn -destination 'platform=iOS Simulator,name=iPhone 14,OS=16.2' -verbose | xcpretty -s
 
+
       - name: Build Archive
-        uses: yukiarrr/ios-build-action@v1.5.0
+        uses: yukiarrr/ios-build-action@v1.11.0
         with:
           project-path: SignIn/SignIn.xcodeproj
-          workspace-path: SignIn/SignIn.xcworkspace # If using a workspace, otherwise, comment out this line
-          scheme: SignIn
-          configuration: Release
-          export-method: development
-          p12-key-base64: ${{ secrets.P12_PASSWORD }}
-          p12-cer-base64: ${{ secrets.P12_CER_BASE64 }}
-          mobileprovision-base64: ${{ secrets.MOBILEPROVISION_BASE64 }}
-          code-signing-identity: ${{ secrets.CODE_SIGNING_IDENTITY }}
-          team-id: X372X3URRM
+          p12-base64: ${{ secrets.P12_PASSWORD }}
+          mobileprovision-base64: ${{ file("DemoTest.mobileprovision") }}
+          code-signing-identity: ${{ 7G96WWH9LW }}
+          team-id: ${{ X372X3URRM }}
+          workspace-path: SignIn/SignIn.xcworkspace # optional        
 
       - name: Build, Archive, and Export IPA
         run: |
