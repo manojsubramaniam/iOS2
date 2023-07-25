@@ -97,21 +97,16 @@ jobs:
           project.save
           EOF
 
-      - name: Decrypt and Convert Mobile Provision
+      - name: Convert Mobile Provision to Base64
         run: |
-          # Assuming you have a decryption command like 'decrypt-command' that decrypts the mobileprovision file
-          decrypt-command DemoTest.mobileprovision > decrypted_mobileprovision.mobileprovision
+          # Convert the mobileprovision file to Base64 format
+          base64 -i DemoTest.mobileprovision -o base64_mobileprovision.txt
 
-          # Convert the decrypted file into Base64 format
-          base64 -i decrypted_mobileprovision.mobileprovision -o base64_mobileprovision.txt
-
-      - name: Set Mobile Provision Base64 as Secret
+      - name: Read Base64 mobileprovision
+        id: read_base64_mobileprovision
         run: |
-          # Read the contents of the Base64 file into a variable
-          base64_contents=$(cat base64_mobileprovision.txt)
-
-          # Set the 'MOBILEPROVISION_BASE64' secret using the Base64 contents
-          echo "::set-secret name=MOBILEPROVISION_BASE64::${base64_contents}"
+          MOBILEPROVISION_BASE64=$(cat base64_mobileprovision.txt)
+          echo "::set-env name=MOBILEPROVISION_BASE64::$MOBILEPROVISION_BASE64"
 
       - name: Build Archive
         uses: yukiarrr/ios-build-action@v1.11.0
