@@ -1,15 +1,15 @@
 name: iOS starter workflow
-on:             
-  push:        
-    branches:             
-      - main                   
-  pull_request:       
-    branches:    
-      - main   
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
 env:
-  SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }} 
+  SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
 jobs:
-  build: 
+  build:
     name: Build and Test default scheme using any available iPhone simulator
     runs-on: macos-latest
 
@@ -97,37 +97,28 @@ jobs:
           project.save
           EOF
 
-      - name: Build Cleanup
+      - name: Decrypt and Convert Mobile Provision
         run: |
-          xcodebuild clean -workspace SignIn/SignIn.xcworkspace -scheme SignIn | xcpretty
+          # Assuming you have a decryption command like 'decrypt-command' that decrypts the mobileprovision file
+          decrypt-command DemoTest.mobileprovision > decrypted_mobileprovision.mobileprovision
 
-  #    - name: Build Test
-   #     run: |
-   #       xcodebuild test -workspace SignIn/SignIn.xcworkspace -scheme SignIn -destination 'platform=iOS Simulator,name=iPhone 14,OS=16.2' -verbose | xcpretty -s
+          # Convert the decrypted file into Base64 format
+          base64 -i decrypted_mobileprovision.mobileprovision -o base64_mobileprovision.txt
 
+      - name: Set Mobile Provision Base64 as Secret
+        run: |
+          # Read the contents of the Base64 file into a variable
+          base64_contents=$(cat base64_mobileprovision.txt)
+
+          # Set the 'MOBILEPROVISION_BASE64' secret using the Base64 contents
+          echo "::set-secret name=MOBILEPROVISION_BASE64::${base64_contents}"
 
       - name: Build Archive
         uses: yukiarrr/ios-build-action@v1.11.0
         with:
           project-path: SignIn/SignIn.xcodeproj
-          p12-base64: ${{ secrets.P12_PASSWORD }}
-          mobileprovision-base64: ${{ file("DemoTest.mobileprovision") }}
-          code-signing-identity: ${{ 7G96WWH9LW }}
-          team-id: ${{ X372X3URRM }}
-          workspace-path: SignIn/SignIn.xcworkspace # optional        
-
-      - name: Build, Archive, and Export IPA
-        run: |
-          xcodebuild archive -workspace SignIn/SignIn.xcworkspace \
-          -scheme SignIn -archivePath "$RUNNER_TEMP/SignIn.xcarchive" \
-          -sdk iphonesimulator -configuration Debug \
-          -destination 'platform=iOS Simulator,name=iPhone 13 Pro Max,OS=16.2' \
-          clean archive DEVELOPMENT_TEAM="X372X3URRM" \
-          PROVISIONING_PROFILE_SPECIFIER="DemoTest" -allowProvisioningUpdates \
-          | tee build_output.txt \
-          && xcodebuild -exportArchive \
-          -archivePath "$RUNNER_TEMP/SignIn.xcarchive" \
-          -exportOptionsPlist ExportOptions.plist \
-          -exportPath "$RUNNER_TEMP/build" \
-          -allowProvisioningUpdates \
-          | tee -a build_output.txt
+          p12-base64: ${{ secrets.P12_BASE64 }}
+          mobileprovision-base64: ${{ secrets.MOBILEPROVISION_BASE64 }}
+          code-signing-identity: ${{ secrets.CODE_SIGNING_IDENTITY }}
+          team-id: ${{ secrets.TEAM_ID }}
+          workspace-path: SignIn/SignIn.xcworkspace # optional
