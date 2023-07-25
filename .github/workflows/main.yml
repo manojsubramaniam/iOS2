@@ -106,7 +106,8 @@ jobs:
         id: read_base64_mobileprovision
         run: |
           MOBILEPROVISION_BASE64=$(cat base64_mobileprovision.txt)
-          echo "::set-env name=MOBILEPROVISION_BASE64::$MOBILEPROVISION_BASE64"
+          echo "MOBILEPROVISION_BASE64=$MOBILEPROVISION_BASE64" >> $GITHUB_ENV
+
 
       - name: Build Archive
         uses: yukiarrr/ios-build-action@v1.11.0
