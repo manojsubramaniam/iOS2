@@ -108,13 +108,15 @@ jobs:
           MOBILEPROVISION_BASE64=$(cat base64_mobileprovision.txt)
           echo "MOBILEPROVISION_BASE64=$MOBILEPROVISION_BASE64" >> $GITHUB_ENV
 
-
-      - name: Build Archive
+      - name: Build and Export iOS App
         uses: yukiarrr/ios-build-action@v1.11.0
         with:
           project-path: SignIn/SignIn.xcodeproj
           p12-base64: ${{ secrets.P12_PASSWORD }}
-          mobileprovision-base64: ${{ secrets.MOBILEPROVISION_BASE64 }}
           code-signing-identity: ${{ secrets.CODE_SIGNING_IDENTITY }}
           team-id: ${{ secrets.TEAM_ID }}
-          workspace-path: SignIn/SignIn.xcworkspace # optional
+          workspace-path: SignIn/SignIn.xcworkspace
+          export-method: development
+          configuration: Release
+          output-path: output.ipa
+          custom-keychain-name: ios-build.keychain
