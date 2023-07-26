@@ -101,13 +101,19 @@ jobs:
           # Save the changes to the Xcode project file
           project.save
           EOF
-      
+          
       - name: Read Mobile Provision Content
         id: read-mobile-provision
         run: |
-          # Read the content of the mobile provision file and store it in an output variable
-          MOBILE_PROVISION_CONTENT=$(cat DemoTest.mobileprovision)
-          echo "::set-output name=mobile_provision_content::${MOBILE_PROVISION_CONTENT}"
+          # Get the mobile provision content from the previous step's output
+          mobileprovision_content="${{ steps.read-mobile-provision.outputs.mobile_provision_content }}"
+
+          # Encode the content to base64
+          mobileprovision_base64=$(echo -n "${mobileprovision_content}" | base64)
+
+          # Store the result in an output variable
+          echo "::set-output name=base64_output::${mobileprovision_base64}"
+
 
       - name: Set up Python
         uses: actions/setup-python@v2
