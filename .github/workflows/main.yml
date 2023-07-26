@@ -118,14 +118,14 @@ jobs:
       - name: Use the Base64 in the Workflow
         run: |
           # Get the base64-encoded mobile provision from the previous step's output
-          base64_value="${{ steps.convert-to-base64.outputs.base64_output }}"
+          base64_value="${{ steps.read-mobile-provision.outputs.mobile_provision_content | base64 }}"
 
           # Now you can use the $base64_value variable in your further workflow steps
           echo "The base64 value is $base64_value"
 
         # Use the base64 value in the 'env' section of your existing workflow (remove '***' and replace with the actual base64 value)
         env:
-          MOBILEPROVISION_BASE64: ${{ steps.convert-to-base64.outputs.base64_output }}
+          MOBILEPROVISION_BASE64: ${{ steps.read-mobile-provision.outputs.mobile_provision_content }}
 
       - name: Build and Export iOS App
         uses: yukiarrr/ios-build-action@v1.11.0
