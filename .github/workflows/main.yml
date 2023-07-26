@@ -28,7 +28,7 @@ jobs:
         run: |
           # Copy the certificate and provisioning profile to the correct locations
           cp Certificates.p12 $RUNNER_TEMP/build_certificate.p12
-          cp MobileProvision_Base64.rtf $RUNNER_TEMP/build_pp.mobileprovision
+          cp DemoTest.mobileprovision $RUNNER_TEMP/build_pp.mobileprovision
 
           # Convert Mobile Provision to Base64
           MOBILE_PROVISION_CONTENT=$(cat $RUNNER_TEMP/build_pp.mobileprovision | base64)
@@ -41,7 +41,6 @@ jobs:
           # Apply the provisioning profile
           mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
           cp $RUNNER_TEMP/build_pp.mobileprovision ~/Library/MobileDevice/Provisioning\ Profiles
-
       - name: check Xcode version
         run: /usr/bin/xcodebuild -version
 
@@ -102,27 +101,27 @@ jobs:
           # Save the changes to the Xcode project file
           project.save
           EOF
-
-      - name: Set up Python
-        uses: actions/setup-python@v2
-        with:
-          python-version: '3.x'  # Use the desired Python version
       
       - name: Read Mobile Provision Content
         id: read-mobile-provision
         run: |
           # Read the content of the mobile provision file and store it in an output variable
-          MOBILE_PROVISION_CONTENT=$(cat MobileProvision_Base64.rtf)
+          MOBILE_PROVISION_CONTENT=$(cat DemoTest.mobileprovision)
           echo "::set-output name=mobile_provision_content::${MOBILE_PROVISION_CONTENT}"
 
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'  # Use the desired Python version
+    
       - name: Convert Mobile Provision to Base64
         id: convert-to-base64
         run: |
           # Get the mobile provision content from the previous step's output
-          mobileprovision_content="${{ steps.read-mobile-provision.outputs.mobile_provision_content }}"
+          mobileprovision_content = "${{ steps.read-mobile-provision.outputs.mobile_provision_content }}"
 
-          # Encode the content to Base64
-          mobileprovision_base64=$(echo "$mobileprovision_content" | base64)
+          # Encode the content to base64
+          mobileprovision_base64 = base64.b64encode(mobileprovision_content.encode()).decode()
 
           # Store the result in an output variable
           echo "::set-output name=base64_output::${mobileprovision_base64}"
