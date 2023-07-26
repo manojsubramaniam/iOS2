@@ -6,8 +6,10 @@ on:
   pull_request:
     branches:
       - main
+
 env:
   SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+
 jobs:
   build:
     name: Build and Test default scheme using any available iPhone simulator
@@ -26,7 +28,11 @@ jobs:
         run: |
           # Copy the certificate and provisioning profile to the correct locations
           cp Certificates.p12 $RUNNER_TEMP/build_certificate.p12
-          cp DemoTest.mobileprovision $RUNNER_TEMP/build_pp.mobileprovision
+          cp MobileProvision_Base64.rtf $RUNNER_TEMP/build_pp.mobileprovision
+
+          # Convert Mobile Provision to Base64
+          MOBILE_PROVISION_CONTENT=$(cat $RUNNER_TEMP/build_pp.mobileprovision | base64)
+          echo "::set-output name=mobile_provision_content::${MOBILE_PROVISION_CONTENT}"
 
           # Import the certificate to the user keychain
           security import $RUNNER_TEMP/build_certificate.p12 -P "$P12_PASSWORD" -A -t cert -f pkcs12 -k ~/Library/Keychains/login.keychain-db
@@ -96,13 +102,6 @@ jobs:
           # Save the changes to the Xcode project file
           project.save
           EOF
-          
-      - name: Read Mobile Provision Content
-        id: read-mobile-provision
-        run: |
-          # Read the content of the mobile provision file and store it in an output variable
-          MOBILE_PROVISION_CONTENT=$(cat MobileProvision_Base64.rtf)
-          echo "::set-output name=mobile_provision_content::${MOBILE_PROVISION_CONTENT}"
 
       - name: Set up Python
         uses: actions/setup-python@v2
@@ -112,8 +111,6 @@ jobs:
       - name: Convert Mobile Provision to Base64
         id: convert-to-base64
         run: |
-          import base64
-
           # Get the mobile provision content from the previous step's output
           mobileprovision_content = "${{ steps.read-mobile-provision.outputs.mobile_provision_content }}"
 
@@ -147,6 +144,4 @@ jobs:
           configuration: Release
           output-path: output.ipa
           custom-keychain-name: ios-build.keychain
-        
-
-
+          export-options: ExportOptions.plist
