@@ -107,18 +107,13 @@ jobs:
         uses: actions/setup-python@v2
         with:
           python-version: '3.x'  # Use the desired Python version
-
-      - name: Convert Mobile Provision to Base64
-        id: convert-to-base64
+    
+      - name: Read Mobile Provision Content
+        id: read-mobile-provision
         run: |
-          # Get the mobile provision content from the previous step's output
-          mobileprovision_content = "${{ steps.read-mobile-provision.outputs.mobile_provision_content }}"
-
-          # Encode the content to base64
-          mobileprovision_base64 = base64.b64encode(mobileprovision_content.encode()).decode()
-
-          # Store the result in an output variable
-          echo "::set-output name=base64_output::${mobileprovision_base64}"
+          # Read the content of the mobile provision file and store it in an output variable
+          MOBILE_PROVISION_CONTENT=$(cat MobileProvision_Base64.rtf)
+          echo "::set-output name=mobile_provision_content::${MOBILE_PROVISION_CONTENT}"
 
       - name: Use the Base64 in the Workflow
         run: |
