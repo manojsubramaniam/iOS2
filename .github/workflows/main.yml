@@ -124,13 +124,13 @@ jobs:
         id: convert-to-base64
         run: |
           # Get the mobile provision content from the previous step's output
-          mobileprovision_content = "${{ steps.read-mobile-provision.outputs.mobile_provision_content }}"
+          mobileprovision_content="${{ steps.read-mobile-provision.outputs.mobile_provision_content }}"
 
           # Encode the content to base64
-          mobileprovision_base64 = base64.b64encode(mobileprovision_content.encode()).decode()
+          mobileprovision_base64=$(echo "$mobileprovision_content" | base64 -w 0)
 
           # Store the result in an output variable
-          echo "::set-output name=base64_output::${mobileprovision_base64}"
+          echo "::set-output name=base64_output::$mobileprovision_base64"
 
       - name: Use the Base64 in the Workflow
         run: |
