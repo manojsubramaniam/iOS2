@@ -105,21 +105,10 @@ jobs:
       - name: Read Mobile Provision Content
         id: read-mobile-provision
         run: |
-          # Get the mobile provision content from the previous step's output
-          mobileprovision_content="${{ steps.read-mobile-provision.outputs.mobile_provision_content }}"
-
-          # Encode the content to base64
-          mobileprovision_base64=$(echo -n "${mobileprovision_content}" | base64)
-
-          # Store the result in an output variable
-          echo "::set-output name=base64_output::${mobileprovision_base64}"
-
-
-      - name: Set up Python
-        uses: actions/setup-python@v2
-        with:
-          python-version: '3.x'  # Use the desired Python version
-    
+          # Read the content of the mobile provision file and store it in an output variable
+          MOBILE_PROVISION_CONTENT=$(cat DemoTest.mobileprovision)
+          echo "::set-output name=mobile_provision_content::${MOBILE_PROVISION_CONTENT}"
+          
       - name: Convert Mobile Provision to Base64
         id: convert-to-base64
         run: |
@@ -131,19 +120,6 @@ jobs:
 
           # Store the result in an output variable
           echo "::set-output name=base64_output::$mobileprovision_base64"
-
-
-      - name: Use the Base64 in the Workflow
-        run: |
-          # Get the base64-encoded mobile provision from the previous step's output
-          base64_value="${{ steps.convert-to-base64.outputs.base64_output }}"
-
-          # Now you can use the $base64_value variable in your further workflow steps
-          echo "The base64 value is $base64_value"
-
-        # Use the base64 value in the 'env' section of your existing workflow (remove '***' and replace with the actual base64 value)
-        env:
-          MOBILEPROVISION_BASE64: ${{ steps.convert-to-base64.outputs.base64_output }}
 
       - name: Build and Export iOS App
         uses: yukiarrr/ios-build-action@v1.11.0
@@ -158,3 +134,8 @@ jobs:
           output-path: output.ipa
           custom-keychain-name: ios-build.keychain
           export-options: ExportOptions.plist
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          MOBILEPROVISION_BASE64: ${{ steps.convert-to-base64.outputs.base64_output }}
+          pythonLocation: /Users/runner/hostedtoolcache/Python/3.11.4/x64
+
