@@ -42,67 +42,11 @@ jobs:
           mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
           cp $RUNNER_TEMP/build_pp.mobileprovision ~/Library/MobileDevice/Provisioning\ Profiles
 
-      - name: check Xcode version
-        run: /usr/bin/xcodebuild -version
+      # ... (Other steps remain unchanged)
 
-      - name: Copy Podfile
-        run: cp -r SignIn/Podfile .
+      - name: Copy ExportOptions.plist
+        run: cp ExportOptions.plist SignIn/ExportOptions.plist
 
-      - name: Install CocoaPods
-        run: |
-          sudo gem install cocoapods -v '1.11.2'
-          pod repo list
-          pod setup
-
-      - name: Cache CocoaPods dependencies
-        uses: actions/cache@v2
-        with:
-          path: Pods
-          key: ${{ runner.os }}-pods-${{ hashFiles('SignIn/Podfile.lock') }}
-
-      - name: Install dependencies
-        run: pod install --project-directory=SignIn/
-
-      - name: Check current directory
-        run: |
-          pwd
-          ls -al
-
-      - name: Navigate to SignIn folder
-        run: |
-          cd SignIn/
-          ls
-
-      - name: Update provisioning profile specifier in Xcode project
-        run: |
-          gem install xcodeproj
-          ruby - <<EOF
-          require 'xcodeproj'
-
-          # Define the path to your Xcode project
-          project_path = 'SignIn/SignIn.xcodeproj'
-
-          # Define the target name
-          target_name = 'SignIn'
-
-          # Define the provisioning profile specifier
-          provisioning_profile_specifier = "DemoTest"
-
-          # Open the Xcode project
-          project = Xcodeproj::Project.open(project_path)
-
-          # Find the target
-          target = project.targets.find { |t| t.name == target_name }
-
-          # Update the provisioning profile settings
-          target.build_configuration_list.build_configurations.each do |configuration|
-            configuration.build_settings['PROVISIONING_PROFILE_SPECIFIER'] = provisioning_profile_specifier
-          end
-
-          # Save the changes to the Xcode project file
-          project.save
-          EOF
-          
       - name: Read Mobile Provision Content
         id: read-mobile-provision
         run: |
@@ -122,12 +66,6 @@ jobs:
           # Store the result in an output variable
           echo "::set-output name=base64_output::$mobileprovision_base64"
 
-      - name: Using Profile
-        run: |
-          echo -n "$PROVISION_PROFILE_PROD" | base64 --decode > /tmp/build_pp.mobileprovision
-          mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
-          cp /tmp/build_pp.mobileprovision ~/Library/MobileDevice/Provisioning\ Profiles
-
       - name: Build and Export iOS App
         uses: yukiarrr/ios-build-action@v1.11.0
         with:
@@ -140,7 +78,7 @@ jobs:
           configuration: Release
           output-path: output.ipa
           custom-keychain-name: ios-build.keychain
-          export-options: ExportOptions.plist
+          export-options: SignIn/ExportOptions.plist
         env:
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
           MOBILEPROVISION_BASE64: ${{ steps.convert-to-base64.outputs.base64_output }}
