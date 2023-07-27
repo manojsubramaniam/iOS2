@@ -80,6 +80,5 @@ jobs:
           custom-keychain-name: ios-build.keychain
           export-options: SignIn/ExportOptions.plist
         env:
-          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
           MOBILEPROVISION_BASE64: ${{ steps.convert-to-base64.outputs.base64_output }}
-          pythonLocation: /Users/runner/hostedtoolcache/Python/3.11.4/x64
+
