@@ -1,17 +1,15 @@
-name: iOS starter workflow
-on:
-  push:
-    branches:
-      - main
-  pull_request:
-    branches:
-      - main
-
+name: iOS starter workflow               
+on:             
+  push:       
+    branches:           
+      - main                  
+  pull_request:    
+    branches:    
+      - main  
 env:
-  SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-
+  SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }} 
 jobs:
-  build:
+  build: 
     name: Build and Test default scheme using any available iPhone simulator
     runs-on: macos-latest
 
@@ -30,10 +28,6 @@ jobs:
           cp Certificates.p12 $RUNNER_TEMP/build_certificate.p12
           cp DemoTest.mobileprovision $RUNNER_TEMP/build_pp.mobileprovision
 
-          # Convert Mobile Provision to Base64
-          MOBILE_PROVISION_CONTENT=$(cat $RUNNER_TEMP/build_pp.mobileprovision | base64)
-          echo "::set-output name=mobile_provision_content::${MOBILE_PROVISION_CONTENT}"
-
           # Import the certificate to the user keychain
           security import $RUNNER_TEMP/build_certificate.p12 -P "$P12_PASSWORD" -A -t cert -f pkcs12 -k ~/Library/Keychains/login.keychain-db
           security list-keychain -d user -s ~/Library/Keychains/login.keychain-db
@@ -42,32 +36,83 @@ jobs:
           mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
           cp $RUNNER_TEMP/build_pp.mobileprovision ~/Library/MobileDevice/Provisioning\ Profiles
 
-      # ... (Other steps remain unchanged)
+      - name: check Xcode version
+        run: /usr/bin/xcodebuild -version
 
-      - name: Copy ExportOptions.plist
-        run: cp ExportOptions.plist SignIn/ExportOptions.plist
+      - name: Copy Podfile
+        run: cp -r SignIn/Podfile .
 
-      
-      - name: Convert Mobile Provision to Base64
-        id: convert-to-base64
+      - name: Install CocoaPods
         run: |
-          # Read the content of the mobile provision file, encode it to base64, and store it in an output variable
-          MOBILE_PROVISION_CONTENT=$(cat DemoTest.mobileprovision | base64 | tr -d '\n')
-          echo "::set-output name=base64_output::${MOBILE_PROVISION_CONTENT}"
+          sudo gem install cocoapods -v '1.11.2'
+          pod repo list
+          pod setup
 
-      - name: Build and Export iOS App
-        uses: yukiarrr/ios-build-action@v1.11.0
-        with:
-          project-path: SignIn/SignIn.xcodeproj
-          p12-base64: ${{ secrets.P12_PASSWORD }}
-          code-signing-identity: ${{ secrets.CODE_SIGNING_IDENTITY }}
-          team-id: ${{ secrets.TEAM_ID }}
-          workspace-path: SignIn/SignIn.xcworkspace
-          export-method: development
-          configuration: Release
-          output-path: output.ipa
-          custom-keychain-name: ios-build.keychain
-          export-options: ExportOptions.plist
-        env:
-          MOBILEPROVISION_BASE64: ${{ steps.convert-to-base64.outputs.base64_output }}
+      - name: Install dependencies
+        run: pod install --project-directory=SignIn/
 
+      - name: Check current directory
+        run: |
+          pwd
+          ls -al
+
+      - name: Navigate to SignIn folder
+        run: |
+          cd SignIn/
+          ls
+
+      - name: Update provisioning profile specifier in Xcode project
+        run: |
+          gem install xcodeproj
+          ruby - <<EOF
+          require 'xcodeproj'
+
+          # Define the path to your Xcode project
+          project_path = 'SignIn/SignIn.xcodeproj'
+
+          # Define the target name
+          target_name = 'SignIn'
+
+          # Define the provisioning profile specifier
+          provisioning_profile_specifier = "DemoTest"
+
+          # Open the Xcode project
+          project = Xcodeproj::Project.open(project_path)
+
+          # Find the target
+          target = project.targets.find { |t| t.name == target_name }
+
+          # Update the provisioning profile settings
+          target.build_configuration_list.build_configurations.each do |configuration|
+            configuration.build_settings['PROVISIONING_PROFILE_SPECIFIER'] = provisioning_profile_specifier
+          end
+
+          # Save the changes to the Xcode project file
+          project.save
+          EOF
+
+      - name: Build and Archive
+        id: build_archive
+        run: |
+          xcodebuild archive -workspace SignIn/SignIn.xcworkspace \
+          -scheme SignIn -archivePath "$RUNNER_TEMP/SignIn.xcarchive" \
+          -sdk iphonesimulator -configuration Debug \
+          -destination 'platform=iOS Simulator,name=iPhone 13 Pro Max,OS=16.2' \
+          clean archive DEVELOPMENT_TEAM="X372X3URRM" \
+          PROVISIONING_PROFILE_SPECIFIER="DemoTest" -allowProvisioningUpdates \
+          | tee build_output.txt
+
+      - name: List files in $RUNNER_TEMP
+        run: |
+          ls -a "$RUNNER_TEMP"
+          ls -a "$RUNNER_TEMP/SignIn.xcarchive"
+          ls -a "$RUNNER_TEMP/SignIn.xcarchive/Products/Applications/"
+
+      - name: Export IPA
+        run: |
+          xcodebuild -archivePath "$RUNNER_TEMP/SignIn.xcarchive" \
+                     -exportOptionsPlist ExportOptions.plist \
+                     -exportPath "$RUNNER_TEMP/build" \
+                     -allowProvisioningUpdates \
+                     -exportArchive \
+                     | tee build_output.txt
