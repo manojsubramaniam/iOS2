@@ -47,24 +47,13 @@ jobs:
       - name: Copy ExportOptions.plist
         run: cp ExportOptions.plist SignIn/ExportOptions.plist
 
-      - name: Read Mobile Provision Content
-        id: read-mobile-provision
-        run: |
-          # Read the content of the mobile provision file and store it in an output variable
-          MOBILE_PROVISION_CONTENT=$(cat DemoTest.mobileprovision)
-          echo "::set-output name=mobile_provision_content::${MOBILE_PROVISION_CONTENT}"
-          
+      
       - name: Convert Mobile Provision to Base64
         id: convert-to-base64
         run: |
-          # Get the mobile provision content from the previous step's output
-          mobileprovision_content="${{ steps.read-mobile-provision.outputs.mobile_provision_content }}"
-
-          # Encode the content to base64 and remove line breaks
-          mobileprovision_base64=$(echo "$mobileprovision_content" | base64 | tr -d '\n')
-
-          # Store the result in an output variable
-          echo "::set-output name=base64_output::$mobileprovision_base64"
+          # Read the content of the mobile provision file, encode it to base64, and store it in an output variable
+          MOBILE_PROVISION_CONTENT=$(cat DemoTest.mobileprovision | base64 | tr -d '\n')
+          echo "::set-output name=base64_output::${MOBILE_PROVISION_CONTENT}"
 
       - name: Build and Export iOS App
         uses: yukiarrr/ios-build-action@v1.11.0
@@ -78,7 +67,7 @@ jobs:
           configuration: Release
           output-path: output.ipa
           custom-keychain-name: ios-build.keychain
-          export-options: SignIn/ExportOptions.plist
+          export-options: ExportOptions.plist
         env:
           MOBILEPROVISION_BASE64: ${{ steps.convert-to-base64.outputs.base64_output }}
 
