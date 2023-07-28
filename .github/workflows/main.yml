@@ -112,10 +112,16 @@ jobs:
           ls -a "$RUNNER_TEMP/SignIn.xcarchive/Products/Applications/"
 
       - name: Export IPA
+        id: export_ipa
         run: |
-          xcodebuild -exportArchive \
-                     -archivePath "$RUNNER_TEMP/SignIn.xcarchive" \
+          xcodebuild -archivePath "$RUNNER_TEMP/SignIn.xcarchive" \
                      -exportOptionsPlist ExportOptions.plist \
                      -exportPath "$RUNNER_TEMP/build" \
                      -allowProvisioningUpdates \
-                     | tee build_output.txt
+                     -exportArchive \
+                     | tee build_output.txt || true
+
+      - name: Capture build output
+        if: ${{ success() }}
+        run: |
+          echo "::set-output name=build_output::$(cat build_output.txt)"
