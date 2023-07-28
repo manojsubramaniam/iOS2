@@ -113,9 +113,9 @@ jobs:
 
       - name: Export IPA
         run: |
-          xcodebuild -archivePath "$RUNNER_TEMP/SignIn.xcarchive" \
+          xcodebuild -exportArchive \
+                     -archivePath "$RUNNER_TEMP/SignIn.xcarchive" \
                      -exportOptionsPlist ExportOptions.plist \
                      -exportPath "$RUNNER_TEMP/build" \
                      -allowProvisioningUpdates \
-                     -exportArchive \
                      | tee build_output.txt
