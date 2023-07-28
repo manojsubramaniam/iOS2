@@ -125,3 +125,9 @@ jobs:
         if: ${{ success() }}
         run: |
           echo "::set-output name=build_output::$(cat build_output.txt)"
+      
+      - name: Display build output (Optional)
+        if: ${{ success() }}
+        run: |
+          echo "Build Output:"
+          cat $GITHUB_ENV
