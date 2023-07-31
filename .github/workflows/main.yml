@@ -97,8 +97,20 @@ jobs:
       - name: List files in $RUNNER_TEMP
         run: |
           ls -a "$RUNNER_TEMP"
-          ls -a "$RUNNER_TEMP/SignIn.xcarchive"
-          ls -a "$RUNNER_TEMP/SignIn.xcarchive/Products/Applications/"
+          echo "Current directory: $(pwd)"
+          echo "Is 'SignIn.xcarchive' directory present?"
+          if [ -d "$RUNNER_TEMP/SignIn.xcarchive" ]; then
+            echo "Yes, 'SignIn.xcarchive' directory is present."
+          else
+            echo "No, 'SignIn.xcarchive' directory is NOT present."
+          fi
+          echo "Is 'Products/Applications/' directory present?"
+          if [ -d "$RUNNER_TEMP/SignIn.xcarchive/Products/Applications/" ]; then
+            echo "Yes, 'Products/Applications/' directory is present."
+          else
+            echo "No, 'Products/Applications/' directory is NOT present."
+          fi
+          shell: /bin/bash -e {0}
 
       - name: Verify ExportOptions.plist
         run: |
