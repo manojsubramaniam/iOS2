@@ -108,8 +108,26 @@ jobs:
       - name: List files in $RUNNER_TEMP
         run: |
           ls -a "$RUNNER_TEMP"
-          ls -a "$RUNNER_TEMP/SignIn.xcarchive"
-          ls -a "$RUNNER_TEMP/SignIn.xcarchive/Products/Applications/"
+          echo "Current directory: $(pwd)"
+          echo "Is 'ExportOptions.plist' file present?"
+          if [ ! -f "ExportOptions.plist" ]; then
+            echo "Error: ExportOptions.plist not found in the root directory!"
+            exit 1
+          fi
+
+          echo "Is PROVISIONING_PROFILE_SPECIFIER set?"
+          if [ -z "$PROVISIONING_PROFILE_SPECIFIER" ]; then
+            echo "Error: PROVISIONING_PROFILE_SPECIFIER not set. Please set it to a valid provisioning profile name or identifier."
+            exit 1
+          fi
+
+          echo "Is DEVELOPMENT_TEAM set?"
+          if [ -z "$DEVELOPMENT_TEAM" ]; then
+            echo "Error: DEVELOPMENT_TEAM not set. Please set it to your team's identifier or leave it empty if you are not using a team."
+            exit 1
+          fi
+          
+          shell: /bin/bash -e {0}
 
       - name: Verify ExportOptions.plist
         run: |
