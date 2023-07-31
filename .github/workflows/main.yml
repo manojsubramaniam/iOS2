@@ -8,6 +8,7 @@ on:
       - main    
 env:
   SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }} 
+  DEMOTEST_MOBILEPROVISION_FILE: "DemoTest.mobileprovision"
 jobs:
   build: 
     name: Build and Test default scheme using any available iPhone simulator
@@ -38,7 +39,8 @@ jobs:
 
       - name: Read Provisioning Profile Specifier from "DemoTest.mobileprovision"
         run: |
-          PROVISIONING_PROFILE_SPECIFIER=$(security cms -D -i "$DEMOTEST_MOBILEPROVISION_FILE" | grep -A1 "Name" | grep -oP '(?<=<string>).*?(?=</string>)')
+          PROVISIONING_PROFILE_SPECIFIER=$(security cms -D -i "$DEMOTEST_MOBILEPROVISION_FILE" | grep -A1 "Name" | grep -o -e '<string>.*</string>' | grep -o -e '>.*<' | sed 's/[><]//g')
+          echo "PROVISIONING_PROFILE_SPECIFIER: $PROVISIONING_PROFILE_SPECIFIER"
           export PROVISIONING_PROFILE_SPECIFIER
           shell: /bin/bash
         
