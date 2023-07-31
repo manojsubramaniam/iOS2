@@ -8,7 +8,8 @@ on:
       - main    
 env:
   SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }} 
-  DEMOTEST_MOBILEPROVISION_FILE: "DemoTest.mobileprovision"
+  PROVISIONING_PROFILE_SPECIFIER: ${{ secrets.PROVISIONING_PROFILE_SPECIFIER }}
+
 jobs:
   build: 
     name: Build and Test default scheme using any available iPhone simulator
@@ -119,7 +120,7 @@ jobs:
           ls -a "$RUNNER_TEMP/SignIn.xcarchive"
           ls -a "$RUNNER_TEMP/SignIn.xcarchive/Products/Applications/"
 
-      - name: Verify ExportOptions.plist
+      - name: List files in $RUNNER_TEMP
         run: |
           ls -a "$RUNNER_TEMP"
           echo "Current directory: $(pwd)"
@@ -134,26 +135,8 @@ jobs:
             echo "Error: PROVISIONING_PROFILE_SPECIFIER not set. Please set it to a valid provisioning profile name or identifier."
             exit 1
           fi
-
-          echo "Is DEVELOPMENT_TEAM set?"
-          if [ -z "$DEVELOPMENT_TEAM" ]; then
-            echo "Error: DEVELOPMENT_TEAM not set. Please set it to your team's identifier or leave it empty if you are not using a team."
-            exit 1
-          fi
-          
-          shell: /bin/bash -e {0}
-
-      - name: Verify Provisioning Profile Specifier and Development Team
-        run: |
-          if [ -z "$PROVISIONING_PROFILE_SPECIFIER" ]; then
-            echo "Error: PROVISIONING_PROFILE_SPECIFIER not set. Please set it to a valid provisioning profile name or identifier."
-            exit 1
-          fi
-          if [ -z "$DEVELOPMENT_TEAM" ]; then
-            echo "Error: DEVELOPMENT_TEAM not set. Please set it to your team's identifier or leave it empty if you are not using a team."
-            exit 1
-          fi
-
+          shell: /bin/bash
+        
       - name: Export IPA
         id: export_ipa
         run: |
