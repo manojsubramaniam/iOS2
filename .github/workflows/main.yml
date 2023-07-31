@@ -37,11 +37,11 @@ jobs:
           mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
           cp $RUNNER_TEMP/build_pp.mobileprovision ~/Library/MobileDevice/Provisioning\ Profiles
 
-      - name: Read Provisioning Profile Specifier from "DemoTest.mobileprovision"
-        run: |
-          PROVISIONING_PROFILE_SPECIFIER=$(security cms -D -i "$DEMOTEST_MOBILEPROVISION_FILE" | grep -A1 "Name" | grep -o -e '<string>.*</string>' | grep -o -e '>.*<' | sed 's/[><]//g')
-          echo "PROVISIONING_PROFILE_SPECIFIER: $PROVISIONING_PROFILE_SPECIFIER"
-          shell: /bin/bash
+   #   - name: Read Provisioning Profile Specifier from "DemoTest.mobileprovision"
+  #      run: |
+  #        PROVISIONING_PROFILE_SPECIFIER=$(security cms -D -i "$DEMOTEST_MOBILEPROVISION_FILE" | grep -A1 "Name" | grep -o -e '<string>.*</string>' | grep -o -e '>.*<' | sed 's/[><]//g')
+   #       echo "PROVISIONING_PROFILE_SPECIFIER: $PROVISIONING_PROFILE_SPECIFIER"
+   #       shell: /bin/bash
  
 
       - name: check Xcode version
