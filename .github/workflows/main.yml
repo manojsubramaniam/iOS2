@@ -108,6 +108,12 @@ jobs:
       - name: List files in $RUNNER_TEMP
         run: |
           ls -a "$RUNNER_TEMP"
+          ls -a "$RUNNER_TEMP/SignIn.xcarchive"
+          ls -a "$RUNNER_TEMP/SignIn.xcarchive/Products/Applications/"
+
+      - name: Verify ExportOptions.plist
+        run: |
+          ls -a "$RUNNER_TEMP"
           echo "Current directory: $(pwd)"
           echo "Is 'ExportOptions.plist' file present?"
           if [ ! -f "ExportOptions.plist" ]; then
@@ -128,13 +134,6 @@ jobs:
           fi
           
           shell: /bin/bash -e {0}
-
-      - name: Verify ExportOptions.plist
-        run: |
-          if [ ! -f "ExportOptions.plist" ]; then
-            echo "Error: ExportOptions.plist not found in the root directory!"
-            exit 1
-          fi
 
       - name: Verify Provisioning Profile Specifier and Development Team
         run: |
