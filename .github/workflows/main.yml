@@ -157,10 +157,4 @@ jobs:
         if: ${{ success() }}
         run: |
           build_output=$(cat export_output.log)
-          echo "::set-output name=build_output::$build_output"
-
-      - name: Display build output (Optional)
-        if: success()
-        run: |
-          echo "Build Output:"
-          echo "${{ steps.<previous_step_id>.outputs.build_output }}"
+          echo "::set-output name=build_output::$build_output
