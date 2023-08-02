@@ -22,9 +22,7 @@ jobs:
       - name: check Xcode version
         run: /usr/bin/xcodebuild -version
         
-      - name: Clear Derived Data
-        run: |
-          rm -rf ~/Library/Developer/Xcode/DerivedData
+
        
       - name: Print Directory Contents
         run: |
@@ -84,9 +82,6 @@ jobs:
           cd SignIn/
           ls
 
-      - name: Clean Build
-        run: xcodebuild clean -workspace SignIn/SignIn.xcworkspace -scheme SignIn
-
       - name: Update provisioning profile specifier in Xcode project
         run: |
           gem install xcodeproj
@@ -116,7 +111,13 @@ jobs:
           # Save the changes to the Xcode project file
           project.save
           EOF
-          
+      - name: Clear Derived Data
+        run: |
+          rm -rf ~/Library/Developer/Xcode/DerivedData    
+      
+      - name: Clean Build
+        run: xcodebuild clean -workspace SignIn/SignIn.xcworkspace -scheme SignIn
+
       - name: Archive and Export
         run: xcodebuild -workspace SignIn/SignIn.xcworkspace -scheme SignIn archive -archivePath "$RUNNER_TEMP/SignIn.xcarchive"
         env:
