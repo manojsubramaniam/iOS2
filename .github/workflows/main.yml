@@ -147,11 +147,12 @@ jobs:
           ls -a # List files in the current directory (for debugging)
           echo "Current directory: $(pwd)"
           xcodebuild -archivePath "$RUNNER_TEMP/SignIn.xcarchive" \
-            -exportOptionsPlist ExportOptions.plist \
+            -exportOptionsPlist "$GITHUB_WORKSPACE/ExportOptions.plist" \
             -exportPath "$RUNNER_TEMP/build" \
             -allowProvisioningUpdates \
             -exportArchive \
             -verbose | tee export_output.log
+
 
       - name: Capture build output
         run: |
