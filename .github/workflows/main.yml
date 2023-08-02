@@ -13,10 +13,10 @@ jobs:
 
       - name: Install CocoaPods
         run: |
-          cp -r SignIn/Podfile .
           gem install cocoapods
           pod setup
-          pod install -project-directory=SignIn/
+          cd SignIn  # Navigate to the project directory
+          pod install  # Run pod install in the project directory
 
       - name: Build and Archive
         run: |
