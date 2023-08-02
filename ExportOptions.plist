@@ -4,7 +4,7 @@
 <dict>
 	<key>method</key>
 	<string>development</string>
-	<key>provisioningProfiles</key>
+	<key>provisioningProfiles</key> 
 	<dict>
 		<key>com.newProject.SignIn</key>
 		<string>DemoTest</string>
