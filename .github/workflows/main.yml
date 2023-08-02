@@ -139,7 +139,6 @@ jobs:
             echo "Error: PROVISIONING_PROFILE_SPECIFIER not set. Please set it to a valid provisioning profile name or identifier."
             exit 1
           fi
-          shell: /bin/bash
         
       - name: Export IPA
         id: export_ipa
