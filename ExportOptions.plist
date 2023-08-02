@@ -3,8 +3,23 @@
 <plist version="1.0">
 <dict>
 	<key>method</key>
-	<string>development</string> 
-	<key>signingStyle</key> 
+	<string>development</string>
+	<key>provisioningProfiles</key>
+	<dict>
+		<key>com.newProject.SignIn</key>
+		<string>DemoTest</string>
+	</dict>
+	<key>signingStyle</key>
 	<string>manual</string>
+	<key>teamID</key>
+	<string>X372X3URRM</string>
+	<key>compileBitcode</key>
+	<false/>
+	<key>destination</key>
+	<string>export</string>
+	<key>stripSwiftSymbols</key>
+	<true/>
+	<key>thinning</key>
+	<string>&lt;none&gt;</string>
 </dict>
 </plist>
