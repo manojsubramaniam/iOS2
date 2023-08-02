@@ -148,7 +148,7 @@ jobs:
              -exportPath "$RUNNER_TEMP/build" \
              -allowProvisioningUpdates \
              -exportArchive \
-             -verbose
+             -verbose | tee export_output.log
 
       - name: Capture build output
         if: ${{ success() }}
