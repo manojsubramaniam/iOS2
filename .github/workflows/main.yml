@@ -118,7 +118,7 @@ jobs:
           EOF
           
       - name: Archive and Export
-        run: xcodebuild -workspace SignIn.xcworkspace -scheme SignIn archive -archivePath "$RUNNER_TEMP/SignIn.xcarchive"
+        run: xcodebuild -workspace SignIn/SignIn.xcworkspace -scheme SignIn archive -archivePath "$RUNNER_TEMP/SignIn.xcarchive"
         env:
           PROVISIONING_PROFILE_SPECIFIER: DemoTest
 
