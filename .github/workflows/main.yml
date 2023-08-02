@@ -26,6 +26,13 @@ jobs:
         run: |
           rm -rf ~/Library/Developer/Xcode/DerivedData
        
+      - name: Print Directory Contents
+        run: |
+          ls -a $GITHUB_WORKSPACE
+          ls -a $RUNNER_TEMP
+          cat $GITHUB_WORKSPACE/ExportOptions.plist
+ 
+       
       - name: View DemoTest.mobileprovision
         run: cat DemoTest.mobileprovision
        
