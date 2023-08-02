@@ -143,12 +143,12 @@ jobs:
       - name: Export IPA
         id: export_ipa
         run: |
-          xcodebuild -archivePath "$RUNNER_TEMP/SignIn.xcarchive" \
-                     -exportOptionsPlist ExportOptions.plist \
-                     -exportPath "$RUNNER_TEMP/build" \
-                     -allowProvisioningUpdates \
-                     -exportArchive \
-                     | tee build_output.txt || true
+            xcodebuild -archivePath "$RUNNER_TEMP/SignIn.xcarchive" \
+             -exportOptionsPlist ExportOptions.plist \
+             -exportPath "$RUNNER_TEMP/build" \
+             -allowProvisioningUpdates \
+             -exportArchive \
+             -verbose
 
       - name: Capture build output
         if: ${{ success() }}
