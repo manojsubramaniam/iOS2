@@ -5,7 +5,7 @@ on:
       - main                        
   pull_request:         
     branches:         
-      - main    
+      - main     
 env:
   SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }} 
   PROVISIONING_PROFILE_SPECIFIER: ${{ secrets.PROVISIONING_PROFILE_SPECIFIER }}
