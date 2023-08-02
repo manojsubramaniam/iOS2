@@ -20,6 +20,6 @@ jobs:
 
       - name: Build and Archive
         run: |
-          xcodebuild clean archive -project SignIn.xcodeproj -scheme SignIn -archivePath SignIn.xcarchive
+          xcodebuild clean archive -project SignIn/SignIn.xcodeproj -scheme SignIn -archivePath SignIn.xcarchive
           xcodebuild -exportArchive -archivePath SignIn.xcarchive -exportPath build -exportOptionsPlist ExportOptions.plist
 
