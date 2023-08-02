@@ -26,12 +26,8 @@ jobs:
         run: |
           rm -rf ~/Library/Developer/Xcode/DerivedData
        
-      - name: Extract Provisioning Profile Specifier
-        run: |
-          DEMOTEST_MOBILEPROVISION_FILE="$RUNNER_TEMP/build_pp.mobileprovision"
-          PROVISIONING_PROFILE_SPECIFIER=$(security cms -D -i "$DEMOTEST_MOBILEPROVISION_FILE" | grep -A1 "Name" | grep -o -e '<string>.*</string>' | grep -o -e '>.*<' | sed 's/[><]//g')
-          echo "PROVISIONING_PROFILE_SPECIFIER: $PROVISIONING_PROFILE_SPECIFIER"
-          shell: /bin/bash
+      - name: View DemoTest.mobileprovision
+        run: cat DemoTest.mobileprovision
        
       - name: Install the Apple certificate and provisioning profile
         env:
