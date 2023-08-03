@@ -21,7 +21,7 @@ jobs:
           brew update
 
           # Install a specific version of Xcode (e.g., Xcode 13)
-          brew install --cask xcode@13
+          brew install --cask xcode-select-13
 
           # Set Xcode path
           sudo xcode-select -s /Applications/Xcode-13.app/Contents/Developer
