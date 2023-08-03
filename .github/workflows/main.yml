@@ -117,12 +117,18 @@ jobs:
           ls -a "$RUNNER_TEMP/SignIn.xcarchive"
           ls -a "$RUNNER_TEMP/SignIn.xcarchive/Products/Applications/"
 
+      - name: List Archive Contents
+        run: |
+          ls -a "$RUNNER_TEMP/SignIn.xcarchive"
+        continue-on-error: true
+        
       - name: Export IPA
         id: export_ipa
         run: |
-          xcodebuild -exportArchive \
+          xcodebuild -exportPath "$RUNNER_TEMP/build" \
             -archivePath "$RUNNER_TEMP/SignIn.xcarchive" \
             -exportOptionsPlist "$GITHUB_WORKSPACE/ExportOptions.plist" \
-            -exportPath "$RUNNER_TEMP/build" \
+            -exportFormat APP \
             -allowProvisioningUpdates \
             -verbose | tee export_output.log
+
