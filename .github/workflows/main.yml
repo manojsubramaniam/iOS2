@@ -1,15 +1,16 @@
-name: iOS starter workflow               
+name: iOS Starter Workflow
+
 on:
   push:
     branches:
-      - main  # Change this to the branch you want to trigger the build on
+      - main
 
 jobs:
   build:
     runs-on: macos-latest
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v2
 
       - name: Install CocoaPods
         run: |
@@ -23,12 +24,15 @@ jobs:
           P12_PASSWORD: ${{ secrets.P12_PASSWORD }}
         run: |
           # Copy the certificate and provisioning profile to the correct locations
-          cp Certificates.p12 $RUNNER_TEMP/build_certificate.p12
-          cp DemoTest.mobileprovision $RUNNER_TEMP/build_pp.mobileprovision
+          cp $GITHUB_WORKSPACE/Certificates.p12 $RUNNER_TEMP/build_certificate.p12
+          cp $GITHUB_WORKSPACE/DemoTest.mobileprovision $RUNNER_TEMP/build_pp.mobileprovision
 
           # Import the certificate to the user keychain
-          security import $RUNNER_TEMP/build_certificate.p12 -P "$P12_PASSWORD" -A -t cert -f pkcs12 -k ~/Library/Keychains/login.keychain-db
-          security list-keychain -d user -s ~/Library/Keychains/login.keychain-db
+          security create-keychain -p "" build.keychain
+          security import $RUNNER_TEMP/build_certificate.p12 -P "$P12_PASSWORD" -A -t cert -f pkcs12 -k ~/Library/Keychains/build.keychain
+          security list-keychains -d user -s build.keychain
+          security unlock-keychain -p "" ~/Library/Keychains/build.keychain
+          security set-keychain-settings -lut 21600 ~/Library/Keychains/build.keychain
 
           # Apply the provisioning profile
           mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
@@ -38,4 +42,3 @@ jobs:
         run: |
           xcodebuild clean archive -project SignIn/SignIn.xcodeproj -scheme SignIn -archivePath SignIn.xcarchive
           xcodebuild -exportArchive -archivePath SignIn.xcarchive -exportPath build -exportOptionsPlist ExportOptions.plist
-
