@@ -120,9 +120,9 @@ jobs:
       - name: Export IPA
         id: export_ipa
         run: |
-          xcodebuild -archivePath "$RUNNER_TEMP/SignIn.xcarchive" \
+          xcodebuild -exportArchive \
+            -archivePath "$RUNNER_TEMP/SignIn.xcarchive" \
             -exportOptionsPlist "$GITHUB_WORKSPACE/ExportOptions.plist" \
             -exportPath "$RUNNER_TEMP/build" \
             -allowProvisioningUpdates \
-            -exportArchive \
             -verbose | tee export_output.log
