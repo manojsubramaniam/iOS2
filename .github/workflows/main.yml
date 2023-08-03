@@ -125,36 +125,24 @@ jobs:
       - name: Export IPA
         id: export_ipa
         run: |
-          echo '<?xml version="1.0" encoding="UTF-8"?>' > export_options.plist
-          echo '<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">' >> export_options.plist
-          echo '<plist version="1.0">' >> export_options.plist
-          echo '<dict>' >> export_options.plist
-          echo '  <key>method</key>' >> export_options.plist
-          echo '  <string>development</string>' >> export_options.plist
-          echo '  <key>provisioningProfiles</key>' >> export_options.plist
-          echo '  <dict>' >> export_options.plist
-          echo '    <key>com.newProject.SignIn</key>' >> export_options.plist
-          echo '    <string>DemoTest</string>' >> export_options.plist
-          echo '  </dict>' >> export_options.plist
-          echo '  <key>signingStyle</key>' >> export_options.plist
-          echo '  <string>manual</string>' >> export_options.plist
-          echo '  <key>teamID</key>' >> export_options.plist
-          echo '  <string>X372X3URRM</string>' >> export_options.plist
-          echo '  <key>compileBitcode</key>' >> export_options.plist
-          echo '  <false/>' >> export_options.plist
-          echo '  <key>destination</key>' >> export_options.plist
-          echo '  <string>export</string>' >> export_options.plist
-          echo '  <key>stripSwiftSymbols</key>' >> export_options.plist
-          echo '  <true/>' >> export_options.plist
-          echo '  <key>thinning</key>' >> export_options.plist
-          echo '  <string>&lt;none&gt;</string>' >> export_options.plist
-          echo '</dict>' >> export_options.plist
-          echo '</plist>' >> export_options.plist
-
           xcodebuild -exportArchive \
             -archivePath "$RUNNER_TEMP/SignIn.xcarchive" \
-            -exportOptionsPlist export_options.plist \
+            -exportOptionsPlist - << EOF \
+              {
+                "method": "development",
+                "provisioningProfiles": {
+                  "com.newProject.SignIn": "DemoTest"
+                },
+                "signingStyle": "manual",
+                "teamID": "X372X3URRM",
+                "compileBitcode": false,
+                "destination": "export",
+                "stripSwiftSymbols": true,
+                "thinning": "<none>"
+              }
+            EOF \
             -exportPath "$RUNNER_TEMP/build" \
             -allowProvisioningUpdates \
             -verbose | tee export_output.log
+
 
