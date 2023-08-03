@@ -79,8 +79,9 @@ jobs:
           PROVISIONING_PROFILE_SPECIFIER="DemoTest" -allowProvisioningUpdates \
           | tee build_output.txt      
 
-      - name: Build and Archive
+      - name: ExportArchive
         run: |
-          cd SignIn
-          xcodebuild clean archive -project SignIn.xcodeproj -scheme SignIn -archivePath SignIn.xcarchive
-          xcodebuild -exportArchive -archivePath SignIn.xcarchive -exportPath build -exportOptionsPlist ExportOptions.plist
+          xcodebuild -exportArchive \
+          -archivePath "$RUNNER_TEMP/SignIn.xcarchive" \
+          -exportPath "$RUNNER_TEMP/SignIn" \
+          -exportOptionsPlist ExportOptions.plist
