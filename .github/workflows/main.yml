@@ -50,6 +50,36 @@ jobs:
 
           echo "Setting keychain settings"
           security set-keychain-settings -t 3600 -u build.keychain
+          
+      - name: Update provisioning profile specifier in Xcode project
+        run: |
+          gem install xcodeproj
+          ruby - <<EOF
+          require 'xcodeproj'
+
+          # Define the path to your Xcode project
+          project_path = 'SignIn/SignIn.xcodeproj'
+
+          # Define the target name
+          target_name = 'SignIn'
+
+          # Define the provisioning profile specifier
+          provisioning_profile_specifier = "DemoTest"
+
+          # Open the Xcode project
+          project = Xcodeproj::Project.open(project_path)
+
+          # Find the target
+          target = project.targets.find { |t| t.name == target_name }
+
+          # Update the provisioning profile settings
+          target.build_configuration_list.build_configurations.each do |configuration|
+            configuration.build_settings['PROVISIONING_PROFILE_SPECIFIER'] = provisioning_profile_specifier
+          end
+
+          # Save the changes to the Xcode project file
+          project.save
+          EOF
 
       - name: Build and Archive
         run: |
