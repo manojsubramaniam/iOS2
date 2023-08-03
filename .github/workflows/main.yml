@@ -1,6 +1,6 @@
 name: iOS Starter Workflow 
  
-on: 
+on:  
   push:  
     branches:
       - main  # Change this to the branch you want to trigger the build on
