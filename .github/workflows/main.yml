@@ -26,30 +26,17 @@ jobs:
         env:
           P12_PASSWORD: ${{ secrets.P12_PASSWORD }}
         run: |
-          echo "Copying Certificates.p12 and DemoTest.mobileprovision to SignIn directory"
-          cp Certificates.p12 SignIn/
-          cp DemoTest.mobileprovision SignIn/
+          # Copy the certificate and provisioning profile to the correct locations
+          cp Certificates.p12 $RUNNER_TEMP/build_certificate.p12
+          cp DemoTest.mobileprovision $RUNNER_TEMP/build_pp.mobileprovision
 
-          echo "Creating build.keychain"
-          security create-keychain -p "" build.keychain
+          # Import the certificate to the user keychain
+          security import $RUNNER_TEMP/build_certificate.p12 -P "$P12_PASSWORD" -A -t cert -f pkcs12 -k ~/Library/Keychains/login.keychain-db
+          security list-keychain -d user -s ~/Library/Keychains/login.keychain-db
 
-          echo "Importing Certificates.p12 to build.keychain"
-          security import Certificates.p12 -k ~/Library/Keychains/build.keychain -P "$P12_PASSWORD" -T /usr/bin/codesign
-
-          echo "Importing DemoTest.mobileprovision to build.keychain"
-          security import DemoTest.mobileprovision -k ~/Library/Keychains/build.keychain -T /usr/bin/codesign
-
-          echo "Listing user keychains"
-          security list-keychains -d user -s build.keychain
-
-          echo "Setting default keychain to build.keychain"
-          security default-keychain -s build.keychain
-
-          echo "Unlocking build.keychain"
-          security unlock-keychain -p "" build.keychain
-
-          echo "Setting keychain settings"
-          security set-keychain-settings -t 3600 -u build.keychain
+          # Apply the provisioning profile
+          mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
+          cp $RUNNER_TEMP/build_pp.mobileprovision ~/Library/MobileDevice/Provisioning\ Profiles
           
       - name: Update provisioning profile specifier in Xcode project
         run: |
