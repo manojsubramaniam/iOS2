@@ -10,25 +10,8 @@ jobs:
     runs-on: macos-latest
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v2
-     
-      - name: Install xcode-install
-        run: |
-          # Install xcode-install
-          gem install xcode-install
-
-          # List available Xcode versions
-          xcode-install list
-
-          # Install a specific version of Xcode (e.g., Xcode 13)
-          xcode-install install 13
-
-          # Switch to the installed version
-          xcode-install switch 13
-
-          # Print Xcode version
-          xcodebuild -version
-
+        uses: actions/checkout@v3
+ 
       - name: Set up CocoaPods
         run: |
           gem install cocoapods
