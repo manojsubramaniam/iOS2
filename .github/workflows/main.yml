@@ -69,6 +69,17 @@ jobs:
           EOF
 
       - name: Build and Archive
+        id: build_archive
+        run: |
+          xcodebuild -workspace SignIn/SignIn.xcworkspace \
+          -scheme SignIn archive -archivePath "$RUNNER_TEMP/SignIn.xcarchive" \
+          -sdk iphonesimulator -configuration Debug \
+          -destination 'platform=iOS Simulator,name=iPhone 13 Pro Max,OS=16.2' \
+          clean archive DEVELOPMENT_TEAM="X372X3URRM" \
+          PROVISIONING_PROFILE_SPECIFIER="DemoTest" -allowProvisioningUpdates \
+          | tee build_output.txt      
+
+      - name: Build and Archive
         run: |
           cd SignIn
           xcodebuild clean archive -project SignIn.xcodeproj -scheme SignIn -archivePath SignIn.xcarchive
