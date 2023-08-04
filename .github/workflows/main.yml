@@ -125,22 +125,22 @@ jobs:
       - name: Export IPA
         id: export_ipa
         run: |
+          echo '{
+            "method": "development",
+            "provisioningProfiles": {
+              "com.newProject.SignIn": "DemoTest"
+            },
+            "signingStyle": "manual",
+            "teamID": "Xxxxx",
+            "compileBitcode": false,
+            "destination": "export",
+            "stripSwiftSymbols": true,
+            "thinning": "<none>"
+          }' > export_options.json
+
           xcodebuild -exportArchive \
             -archivePath "$RUNNER_TEMP/SignIn.xcarchive" \
-            -exportOptionsPlist - << EOF \
-              {
-                "method": "development",
-                "provisioningProfiles": {
-                  "com.newProject.SignIn": "DemoTest"
-                },
-                "signingStyle": "manual",
-                "teamID": "X372X3URRM",
-                "compileBitcode": false,
-                "destination": "export",
-                "stripSwiftSymbols": true,
-                "thinning": "<none>"
-              }
-            EOF \
+            -exportOptionsPlist export_options.json \
             -exportPath "$RUNNER_TEMP/build" \
             -allowProvisioningUpdates \
             -verbose | tee export_output.log
