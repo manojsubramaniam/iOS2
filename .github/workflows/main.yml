@@ -122,8 +122,7 @@ jobs:
           ls -a "$RUNNER_TEMP/SignIn.xcarchive"
         continue-on-error: true
         
-      - name: Export IPA
-        id: export_ipa
+      - name: Create Export Options File
         run: |
           echo '{
             "method": "development",
@@ -138,6 +137,9 @@ jobs:
             "thinning": "<none>"
           }' > export_options.json
 
+      - name: Export IPA
+        id: export_ipa
+        run: |
           xcodebuild -exportArchive \
             -archivePath "$RUNNER_TEMP/SignIn.xcarchive" \
             -exportOptionsPlist export_options.json \
@@ -149,3 +151,6 @@ jobs:
       - name: Display Export Error Log if Failed
         if: ${{ failure() }}
         run: cat export_output.log
+
+
+
