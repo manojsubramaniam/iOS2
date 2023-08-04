@@ -145,6 +145,7 @@ jobs:
             -allowProvisioningUpdates \
             -verbose | tee export_output.log
           shell: /bin/bash -e {0}
-          
-      - name: Display Export Error Log
+
+      - name: Display Export Error Log if Failed
+        if: ${{ failure() }}
         run: cat export_output.log
