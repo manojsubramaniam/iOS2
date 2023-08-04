@@ -131,7 +131,7 @@ jobs:
               "com.newProject.SignIn": "DemoTest"
             },
             "signingStyle": "manual",
-            "teamID": "Xxxxx",
+            "teamID": "X372X3URRM",
             "compileBitcode": false,
             "destination": "export",
             "stripSwiftSymbols": true,
@@ -144,5 +144,3 @@ jobs:
             -exportPath "$RUNNER_TEMP/build" \
             -allowProvisioningUpdates \
             -verbose | tee export_output.log
-
-
