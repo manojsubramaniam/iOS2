@@ -144,3 +144,4 @@ jobs:
             -exportPath "$RUNNER_TEMP/build" \
             -allowProvisioningUpdates \
             -verbose | tee export_output.log
+          shell: /bin/bash -e {0}
