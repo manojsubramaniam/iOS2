@@ -41,6 +41,9 @@ jobs:
       - name: check Xcode version
         run: /usr/bin/xcodebuild -version
 
+      - name: Check Shell Version
+        run: echo "$SHELL --version"
+
       - name: Copy Podfile
         run: cp -r SignIn/Podfile .
 
