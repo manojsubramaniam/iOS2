@@ -146,7 +146,6 @@ jobs:
             -exportPath "$RUNNER_TEMP/build" \
             -allowProvisioningUpdates \
             -verbose | tee export_output.log
-          shell: /bin/bash -e {0}
 
       - name: Display Export Error Log if Failed
         if: ${{ failure() }}
