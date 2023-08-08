@@ -142,10 +142,11 @@ jobs:
         run: |
           xcodebuild -exportArchive \
             -archivePath "$RUNNER_TEMP/SignIn.xcarchive" \
-            -exportOptionsPlist export_options.json \
+            -exportOptionsPlist ExportOptions.plist \  # Use the actual path to the ExportOptions.plist file
             -exportPath "$RUNNER_TEMP/build" \
             -allowProvisioningUpdates \
             -verbose | tee export_output.log
+
 
       - name: Display Export Error Log if Failed
         if: ${{ failure() }}
