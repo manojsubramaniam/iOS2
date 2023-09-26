@@ -111,11 +111,11 @@ jobs:
             -allowProvisioningUpdates \
             | tee build_output.txt
 
-      - name: List files in $RUNNER_TEMP
-        run: |
-          ls -a "$RUNNER_TEMP"
-          ls -a "$RUNNER_TEMP/SignIn.xcarchive"
-          ls -a "$RUNNER_TEMP/SignIn.xcarchive/Products/Applications/"
+#      - name: List files in $RUNNER_TEMP
+ #       run: |
+#          ls -a "$RUNNER_TEMP"
+#          ls -a "$RUNNER_TEMP/SignIn.xcarchive"
+  #        ls -a "$RUNNER_TEMP/SignIn.xcarchive/Products/Applications/"
 
       - name: Export IPA
         id: export_ipa
