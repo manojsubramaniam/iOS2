@@ -4,11 +4,6 @@
 <dict>
 	<key>method</key>
 	<string>development</string> 
-	<key>provisioningProfiles</key>  
-	<dict>
-		<key>com.newProject.SignIn</key>
-		<string>DemoTest</string>
-	</dict>
 	<key>signingStyle</key>
 	<string>automatic</string>
 	<key>teamID</key>
