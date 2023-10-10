@@ -6,7 +6,7 @@ on:
   pull_request:
     branches:
       - main
-env:
+env: 
   SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
   PROVISIONING_PROFILE_SPECIFIER: ${{ secrets.PROVISIONING_PROFILE_SPECIFIER }}
   P12_PASSWORD: ${{ secrets.P12_PASSWORD }}
