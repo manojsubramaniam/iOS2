@@ -5,7 +5,7 @@
 	<key>method</key>
 	<string>development</string> 
 	<key>signingStyle</key>
-	<string>automatic</string>
+	<string>automatic</string> 
 	<key>teamID</key>
 	<string>X372X3URRM</string>
 	<key>compileBitcode</key>
