@@ -105,7 +105,7 @@ jobs:
           xcodebuild archive -workspace SignIn/SignIn.xcworkspace \
           -scheme SignIn -archivePath "$RUNNER_TEMP/SignIn.xcarchive" \
           -sdk iphonesimulator -configuration Debug \
-          -destination 'Platform=Build ,name=Any IOS Device (arm64)' \
+          -destination 'platform=iOS Simulator,name=Any iOS Simulator Device' \
           clean archive DEVELOPMENT_TEAM="X372X3URRM" \
           PROVISIONING_PROFILE_SPECIFIER="DemoTest" -allowProvisioningUpdates \
           | tee build_output.txt
