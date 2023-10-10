@@ -10,7 +10,7 @@
 		<string>DemoTest</string>
 	</dict>
 	<key>signingStyle</key>
-	<string>manual</string>
+	<string>automatic</string>
 	<key>teamID</key>
 	<string>X372X3URRM</string>
 	<key>compileBitcode</key>
