@@ -122,10 +122,13 @@ jobs:
           ls -a SignIn/SignIn.xcarchive
           ls -a SignIn/SignIn.xcarchive/Products/Applications/
 
+#      - name: Export IPA
+#        run: xcodebuild -exportArchive \
+#              -archivePath "SignIn/SignIn.xcarchive" \
+#              -exportPath "SignIn/build" \
+#              -exportOptionsPlist "ExportOptions.plist"
+              
       - name: Export IPA
-        run: xcodebuild -exportArchive \
-              -archivePath "SignIn/SignIn.xcarchive" \
-              -exportPath "SignIn/build" \
-              -exportOptionsPlist "ExportOptions.plist"
-
+        run: xcodebuild -exportArchive -archivePath "SignIn/SignIn.xcarchive" -exportPath "SignIn/build" -exportOptionsPlist "ExportOptions.plist"
       
+          
