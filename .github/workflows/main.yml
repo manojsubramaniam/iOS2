@@ -1,12 +1,13 @@
-name: iOS starter workflow         
-on:  
-  push: 
-    branches:    
-      - main 
-  pull_request:  
-    branches: 
+name: iOS starter workflow
+on:
+  push:
+    branches:
       - main
-env: 
+  pull_request:
+    branches:
+      - main
+
+env:
   SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
   PROVISIONING_PROFILE_SPECIFIER: ${{ secrets.PROVISIONING_PROFILE_SPECIFIER }}
   P12_PASSWORD: ${{ secrets.P12_PASSWORD }}
@@ -35,7 +36,7 @@ jobs:
 
           # Apply the provisioning profile
           mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
-          cp $RUNNER_TEMP/build_pp.mobileprovision ~/Library/MobileDevice/Provisioning\ Profiles
+          cp "$RUNNER_TEMP/build_pp.mobileprovision" ~/Library/MobileDevice/Provisioning\ Profiles
 
       - name: Check Shell Version
         run: echo "$SHELL --version"
@@ -109,7 +110,7 @@ jobs:
           clean archive DEVELOPMENT_TEAM="X372X3URRM" \
           PROVISIONING_PROFILE_SPECIFIER="DemoTest" -allowProvisioningUpdates \
           | tee build_output.txt
-  
+
       - name: List files in $RUNNER_TEMP
         run: |
           ls -a "$RUNNER_TEMP"
@@ -122,5 +123,4 @@ jobs:
           xcodebuild -exportArchive \
             -archivePath "$RUNNER_TEMP/SignIn.xcarchive" \
             -exportPath "$RUNNER_TEMP/build" \
-            -exportOptionsPlist "ExportOptions.plist"
-             
+            -exportOptionsPlist "$GITHUB_WORKSPACE/ExportOptions.plist"
