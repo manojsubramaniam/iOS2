@@ -100,6 +100,11 @@ jobs:
       - name: Clean Build
         run: xcodebuild clean -workspace SignIn/SignIn.xcworkspace -scheme SignIn
 
+      - name: Clean and Build
+        run: |
+          xcodebuild clean -workspace SignIn/SignIn.xcworkspace -scheme SignIn
+          xcodebuild build -workspace SignIn/SignIn.xcworkspace -scheme SignIn -sdk iphonesimulator -configuration Debug
+
       - name: Build and Archive
         id: build_archive
         run: |
