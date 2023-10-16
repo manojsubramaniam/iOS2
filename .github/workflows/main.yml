@@ -118,9 +118,9 @@ jobs:
 
       - name: List files in $RUNNER_TEMP
         run: |
-          ls -a "$RUNNER_TEMP"
-          ls -a "$RUNNER_TEMP/SignIn.xcarchive"
-          ls -a "$RUNNER_TEMP/SignIn.xcarchive/Products/Applications/"
+          ls -a SignIn
+          ls -a SignIn/SignIn.xcarchive
+          ls -a SignIn/SignIn.xcarchive/Products/Applications/
 
       - name: Export IPA
         id: export_ipa
