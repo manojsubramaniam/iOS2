@@ -109,7 +109,7 @@ jobs:
         id: build_archive
         run: |
           xcodebuild archive -workspace SignIn/SignIn.xcworkspace \
-          -scheme SignIn -archivePath "$RUNNER_TEMP/SignIn.xcarchive" \
+          -scheme SignIn -archivePath SignIn/SignIn.xcarchive \
           -sdk iphonesimulator -configuration Debug \
           -destination 'platform=iOS Simulator,name=iPhone 13 Pro Max,OS=16.2' \
           clean archive DEVELOPMENT_TEAM="X372X3URRM" \
@@ -129,3 +129,6 @@ jobs:
             -archivePath "$RUNNER_TEMP/SignIn.xcarchive" \
             -exportPath "$RUNNER_TEMP/build" \
             -exportOptionsPlist "$GITHUB_WORKSPACE/ExportOptions.plist"
+
+
+      
