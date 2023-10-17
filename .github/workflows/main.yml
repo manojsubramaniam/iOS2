@@ -129,6 +129,6 @@ jobs:
 #              -exportOptionsPlist "ExportOptions.plist"
               
       - name: Export IPA
-        run: xcodebuild -exportArchive -archivePath "SignIn/SignIn.xcarchive" -exportPath "SignIn/build" -exportOptionsPlist "ExportOptions.plist"
+        run: xcodebuild -exportArchive -archivePath SignIn/SignIn.xcarchive -exportOptionsPlist ExportOptions.plist -exportPath SignIn.ipa
       
           
