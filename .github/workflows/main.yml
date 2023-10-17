@@ -107,20 +107,16 @@ jobs:
 
       - name: Build and Archive
         id: build_archive
-        run: |
-          xcodebuild archive -workspace SignIn/SignIn.xcworkspace \
-          -scheme SignIn -archivePath SignIn/SignIn.xcarchive \
-          -sdk iphonesimulator -configuration Debug \
-          -destination 'platform=iOS Simulator,name=iPhone 13 Pro Max,OS=16.2' \
-          clean archive DEVELOPMENT_TEAM="X372X3URRM" \
-          PROVISIONING_PROFILE_SPECIFIER="DemoTest" -allowProvisioningUpdates \
-          | tee build_output.txt
+        run: |          
+          xcodebuild -workspace SignIn/SignIn.xcworkspace \
+          -scheme SignIn clean archive -configuration release \
+          -sdk iphoneos -archivePath SignIn.xcarchive
 
       - name: List files in $RUNNER_TEMP
         run: |
-          ls -a SignIn
-          ls -a SignIn/SignIn.xcarchive
-          ls -a SignIn/SignIn.xcarchive/Products/Applications/
+          ls -a 
+          ls -a SignIn.xcarchive
+          ls -a SignIn.xcarchive/Products/Applications/
 
 #      - name: Export IPA
 #        run: xcodebuild -exportArchive \
