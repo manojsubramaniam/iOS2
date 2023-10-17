@@ -126,5 +126,5 @@ jobs:
               
       - name: Export IPA
         run: xcodebuild -exportArchive -archivePath SignIn/SignIn.xcarchive -exportOptionsPlist ExportOptions.plist -exportPath SignIn.ipa
-      
+       
           
